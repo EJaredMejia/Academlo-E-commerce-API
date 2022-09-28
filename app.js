@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 
 // Define endpoints
-app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/users', usersRouter);	
 
 // Global error handler
 app.use(globalErrorHandler);
