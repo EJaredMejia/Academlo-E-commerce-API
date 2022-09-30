@@ -125,7 +125,8 @@ const getUsersOrders = catchAsync(async (req, res, next) => {
       model: Cart,
       include: {
         model: ProductInCart,
-        include: { model: Product, where: { status: "purchased" } },
+        where: { status: "purchased" },
+        include: { model: Product, include: { model: ProductImg } },
       },
     },
   });
