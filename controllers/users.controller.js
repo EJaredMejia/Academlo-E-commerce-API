@@ -31,6 +31,12 @@ const getAllUsers = catchAsync(async (req, res, next) => {
 const createUser = catchAsync(async (req, res, next) => {
   const { username, email, password } = req.body;
 
+  const userExist = await User.findOne({ where: { email } });
+
+  if (userExist) {
+    return next(new AppError("email is already taken", 409));
+  }
+
   // Encrypt the password
   const salt = await bcrypt.genSalt(12);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -139,8 +145,8 @@ const getUsersOrders = catchAsync(async (req, res, next) => {
   });
 });
 
-const getOneUsersOrder = catchAsync(async (res, req, next) => {
-  const { order } = req;
+const getOneUsersOrder = catchAsync(async (req, res, next) => {
+  let { order } = req;
 
   order = await Order.findOne({
     where: { id: order.id },
@@ -148,7 +154,8 @@ const getOneUsersOrder = catchAsync(async (res, req, next) => {
       model: Cart,
       include: {
         model: ProductInCart,
-        include: { model: Product, where: { status: "purchased" } },
+        where: { status: "purchased" },
+        include: { model: Product, include: { model: ProductImg } },
       },
     },
   });

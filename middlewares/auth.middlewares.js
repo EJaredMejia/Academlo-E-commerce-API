@@ -74,6 +74,7 @@ const protectAdmin = (req, res, next) => {
 
 const protectUsersProducts = (req, res, next) => {
   const { product, sessionUser } = req;
+  console.log(sessionUser);
 
   if (sessionUser.id !== product.userId) {
     return next(new AppError("You are not owner of this product", 403));
@@ -86,5 +87,5 @@ module.exports = {
   protectSession,
   protectUsersAccount,
   protectAdmin,
-  protectUsersProducts
+  protectUsersProducts,
 };
