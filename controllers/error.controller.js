@@ -41,19 +41,18 @@ const globalErrorHandler = (error, req, res, next) => {
   // Set default values for original error obj
   error.statusCode = error.statusCode || 500;
   error.status = error.status || "fail";
+  error.message = error.message;
 
   if (process.env.NODE_ENV === "development") {
     sendErrorDev(error, req, res);
   } else if (process.env.NODE_ENV === "production") {
-    let err = { ...error };
-
-    if (error.name === "TokenExpiredError") err = tokenExpiredError();
+    if (error.name === "TokenExpiredError") error = tokenExpiredError();
     else if (error.name === "JsonWebTokenError")
-      err = tokenInvalidSignatureError();
+      error = tokenInvalidSignatureError();
     else if (error.name === "SequelizeUniqueConstraintError")
-      err = dbUniqueConstraintError();
-    else if (error.code === "LIMIT_UNEXPECTED_FILE") err = imgLimitError();
-    sendErrorProd(err, req, res);
+      error = dbUniqueConstraintError();
+    else if (error.code === "LIMIT_UNEXPECTED_FILE") error = imgLimitError();
+    sendErrorProd(error, req, res);
   }
 };
 
