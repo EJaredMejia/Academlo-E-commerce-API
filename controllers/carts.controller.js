@@ -146,23 +146,24 @@ const purchaseCart = catchAsync(async (req, res, next) => {
 
   const cartProducts = await ProductInCart.findAll({
     where: { cartId: cart.id, status: "active" },
+    include: { model: Product },
   });
+
+  console.log(cartProducts);
 
   if (!cartProducts) {
     return next(new AppError("there is no products in the cart", 404));
   }
 
   //purchase order
-  let totalPrice;
+  let totalPrice = 0;
   const productPromises = cartProducts.map(async (productInCart) => {
-    const product = await Product.findOne({
-      where: { id: productInCart.productId, status: "active" },
-    });
+    console.log(productInCart.product.price * productInCart.quantity);
+    totalPrice += productInCart.product.price * productInCart.quantity;
 
-    totalPrice += Number(product.price) * Number(productInCart.quantity);
-
-    await product.update({
-      quantity: Number(product.quantity) - Number(productInCart.quantity),
+    await productInCart.product.update({
+      quantity:
+        Number(productInCart.product.quantity) - Number(productInCart.quantity),
     });
 
     await productInCart.update({ status: "purchased" });
