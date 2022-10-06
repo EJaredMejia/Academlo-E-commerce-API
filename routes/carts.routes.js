@@ -6,6 +6,7 @@ const {
   updateCartProduct,
   deleteCartProduct,
   purchaseCart,
+  getUsersCart,
 } = require("../controllers/carts.controller");
 
 //middlewares
@@ -31,6 +32,8 @@ const {
 const cartsRouter = express.Router();
 
 cartsRouter.use(protectSession);
+
+cartsRouter.get("/", getUsersCart);
 
 cartsRouter.post(
   "/add-product",

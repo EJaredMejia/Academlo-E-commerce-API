@@ -1,12 +1,37 @@
 //models
 const { Cart } = require("../models/cart.model");
 const { Order } = require("../models/order.model");
+const { ProductImg } = require("../models/productImg.model");
 const { ProductInCart } = require("../models/productInCart.model");
 const { Product } = require("../models/products.model");
 
 //utils
 const { AppError } = require("../utils/appError.util");
 const { catchAsync } = require("../utils/catchAsync.util");
+
+const getUsersCart = catchAsync(async (req, res, next) => {
+  const { sessionUser } = req;
+
+  const cart = await Cart.findOne({
+    where: { userId: sessionUser.id, status: "active" },
+    include: {
+      model: ProductInCart,
+      where: { status: "active" },
+      include: { model: Product, include: { model: ProductImg } },
+    },
+  });
+
+  if (!cart) {
+    return next(new AppError("cart not found", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      cart,
+    },
+  });
+});
 
 const addProductToCart = catchAsync(async (req, res, next) => {
   const { productId, quantity } = req.body;
@@ -167,4 +192,5 @@ module.exports = {
   updateCartProduct,
   deleteCartProduct,
   purchaseCart,
+  getUsersCart,
 };
