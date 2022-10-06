@@ -159,7 +159,7 @@ const purchaseCart = catchAsync(async (req, res, next) => {
       where: { id: productInCart.productId, status: "active" },
     });
 
-    totalPrice = Number(product.price) * Number(productInCart.quantity);
+    totalPrice += Number(product.price) * Number(productInCart.quantity);
 
     await product.update({
       quantity: Number(product.quantity) - Number(productInCart.quantity),
