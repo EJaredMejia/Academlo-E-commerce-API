@@ -2,6 +2,7 @@ const express = require("express");
 const helmet = require("helmet");
 const compression = require("compression");
 const morgan = require("morgan");
+const cors = require("cors");
 
 const dotenv = require("dotenv");
 
@@ -20,6 +21,9 @@ const app = express();
 
 // Enable Express app to receive JSON data
 app.use(express.json());
+
+//enable cors
+app.use(cors())
 
 app.use(helmet());
 
