@@ -1,26 +1,22 @@
-const { Sequelize, DataTypes } = require("sequelize");
-const dotenv = require("dotenv");
+const { DataTypes } = require("sequelize");
+const { getSequelize } = require("./sequelize.utils");
 
-dotenv.config({ path: "./config.env" });
+let sequelize = null;
 
-// Establish db connection
-const db = new Sequelize({
-  dialect: "postgres",
-  host: process.env.DB_HOST,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-  database: process.env.DB,
-  logging: false,
-  dialectOptions:
-    process.env.NODE_ENV === "production"
-      ? {
-          ssl: {
-            require: true,
-            rejectUnauthorized: false,
-          },
-        }
-      : {},
-});
+function loadSequelize() {
+  // Load environment variables
+  const sequelize = getSequelize();
 
-module.exports = { db, DataTypes };
+  return sequelize;
+}
+
+function getDb() {
+  // re-use the sequelize instance across invocations to improve performance
+  if (!sequelize) {
+    sequelize = loadSequelize();
+  }
+
+  return sequelize;
+}
+
+module.exports = { getDb, DataTypes };

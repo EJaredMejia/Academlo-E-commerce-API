@@ -1,6 +1,6 @@
-const { db, DataTypes } = require("../utils/database.util");
+const { getDb, DataTypes } = require("../utils/database.util");
 
-const Cart = db.define("cart", {
+const Cart = getDb().define("cart", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,

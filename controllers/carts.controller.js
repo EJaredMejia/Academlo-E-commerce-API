@@ -149,8 +149,6 @@ const purchaseCart = catchAsync(async (req, res, next) => {
     include: { model: Product },
   });
 
-  console.log(cartProducts);
-
   if (!cartProducts) {
     return next(new AppError("there is no products in the cart", 404));
   }
@@ -158,7 +156,6 @@ const purchaseCart = catchAsync(async (req, res, next) => {
   //purchase order
   let totalPrice = 0;
   const productPromises = cartProducts.map(async (productInCart) => {
-    console.log(productInCart.product.price * productInCart.quantity);
     totalPrice += productInCart.product.price * productInCart.quantity;
 
     await productInCart.product.update({
