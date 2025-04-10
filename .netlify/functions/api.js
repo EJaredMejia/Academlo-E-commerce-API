@@ -6,7 +6,6 @@ const { getDb } = require("../../utils/database.util");
 module.exports.handler = async function (...args) {
   const sequelize = getDb();
 
-  console.log(sequelize);
   if (sequelize) {
     // restart connection pool to ensure connections are not re-used across invocations
     sequelize.connectionManager.initPools();
