@@ -1,6 +1,6 @@
-const { db, DataTypes } = require("../utils/database.util");
+const { getDb, DataTypes } = require("../utils/database.util");
 
-const Order = db.define("order", {
+const Order = getDb().define("order", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,

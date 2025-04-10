@@ -1,6 +1,6 @@
-const { db, DataTypes } = require("../utils/database.util");
+const { getDb, DataTypes } = require("../utils/database.util");
 
-const User = db.define("user", {
+const User = getDb().define("user", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
