@@ -75,7 +75,7 @@ export const addProductToCart = catchAsync(
     }
 
     const newProductInCart = await ProductInCart.create({
-      cartId: (cart as any).id,
+      cartId: cart.id,
       productId,
       quantity,
       status: "active",
